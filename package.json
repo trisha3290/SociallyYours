@@ -2,9 +2,11 @@
   "name": "ourapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "nodemon idex.js"
+    "start": "nodemon app.js",
+    "watch": "webpack --watch",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +22,7 @@
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "cookie": "^0.4.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
     "dompurify": "^2.3.3",
@@ -34,6 +37,7 @@
     "md5": "^2.3.0",
     "mongodb": "^4.2.0",
     "mongoose": "^6.1.2",
+    "npm-watch": "^0.11.0",
     "parser": "^0.1.4",
     "sanitize-html": "^2.6.0",
     "socket.io": "^4.4.0",

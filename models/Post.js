@@ -14,7 +14,16 @@ const postSchema = new Schema({
     type: String,
     required:true,
   },
+  avatar: {
+    type: String,
+  },
+  createdDate: {
+    type: Date,
+    index : true,
+  },
 });
+
+postSchema.index({'$**': 'text'});
 
 const Post= mongoose.model('Post', postSchema);
 module.exports = Post;

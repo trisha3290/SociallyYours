@@ -2,17 +2,19 @@
 
 <div class="create-post py-md-5 ">
   <%- include('./partials/flash') %>
-    <form action="/create-post" method="POST">
+  
+    <form action="/post/<%= post._id %>/edit" method="POST">
+        <a class="small font-weight-bold"  href="/post/<%= post._id%>">&laquo; Back to post permalink</a>
         <div class = "form-group">
             <label class="form-label " for="title"><small>Title</small></label>
-            <input type="text" class="form-control form-control-title" id="title" name="title" required>
+            <input type="text" value = "<%= post.title %>" class="form-control form-control-title" id="title" name="title" required>
         </div>
         <div class="form-group">
             <label class="form-label" for="body"><small>Blog Content</small></label>
-            <textarea id="body" class="form-control" name="body" required></textarea>
+            <textarea id="body" class="form-control" name="body" required><%= post.body %></textarea>
         </div>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit" class="btn btn-primary"><small>Save new post</small></button>
+      <button type="submit" class="btn btn-primary"><small>Save update</small></button>
     </form>
   </div>
 

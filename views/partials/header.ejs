@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
     <link href= "/style.css" rel="stylesheet" type="text/css" />
-    <title><%= title %></title>
+    
 
     <!-- <script type = "text/javascript">
         function changeHashOnLoad() {
@@ -63,25 +63,37 @@
 <header class="header-bar">
     <!-- <div class="container d-flex flex-column flex-md-row align-items-center p-3"> -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id = "nav">
-        <h4 class="mt-0 mb-3 mr-md-auto font-weight-normal ml-lg-5 d-flex flex-column flex-md-row align-items-center p-2"><a href="/" class="text-white">OurApp</a></h4>
         
            <% if(user) {%>
-                <div class="flex-row my-3 my-md-0">
-                    <a href="#" class="text-white mr-2 header-search-icon" title="Search" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-search"></i></a>
+            <h4 class="mt-0 mb-3 mr-md-auto font-weight-normal ml-lg-5 d-flex flex-column flex-md-row align-items-center p-2"><a href="/home-dashboard" class="text-white">OurApp</a></h4>
+            
+                <div class="flex-row my-3 my-md-0 ml-2 " >
+                    <form action="/search" method="POST" class="d-inline">
+                        <input type="text" class="form-search" name="search" id="inputusernameforsignup" placeholder="Search" >
+                        <!-- <button type="submit"><a  class="text-white mr-2 header-search-icon" title="Search" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-search"></i></a></button> -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-success" title="Search" data-toggle="tooltip" data-placement="bottom">
+                            <i class="fas fa-search"></i>
+                        </button>
+        
+                    </form>
                     <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-comment"></i></span>
-                    <a  class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>
+                    <a href="/profile/<%= user.username %>" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>
                     <a href="/post-create"><button type="button" class="btn btn-success mr-sm-2" >Create Post</button> </a>
                     <form action="/logout" method="POST" class="d-inline">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn-secondary mr-lg-5" onclick = "msgprint()" >Sign Out</button>
                     </form>
                 </div>
             
             <% }else{ %>
 
-                
+                <h4 class="mt-0 mb-3 mr-md-auto font-weight-normal ml-lg-5 d-flex flex-column flex-md-row align-items-center p-2"><a href="/" class="text-white">OurApp</a></h4>
+
                 <form  action="/signin" method="POST" class="form-inline mr-lg-5 pt-2">
                     <input type="text" class="form-control form-control-sm input-dark mr-sm-2 " id="inputusername" name = "username" placeholder="Username" placeholder = ".col-lg-4">
                     <input type="password" class="form-control form-control-sm input-dark mr-sm-2 " id="inputPassword"  name = "password" placeholder="Password" minlength="8" required>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="btn btn-primary pd">Sign In</button>
                 </form>
 

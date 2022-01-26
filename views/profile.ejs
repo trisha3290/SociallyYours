@@ -1,0 +1,18 @@
+<%- include("./partials/header.ejs") %>
+
+<div class="dashboardprofile p-5">
+    <%- include('./partials/flash') %>
+    <%- include('partials/profileShared') %>
+        <div class="list-group">
+            <% posts.forEach(post => { %>
+                <% if (post.author === user) { %>
+                <a href="/post/<%= post._id  %>" class="list-group-item list-group-item-action">
+                <img class="avatar-tiny" src="<%= post.avatar %>">
+                    <strong><%= post.title %></strong> <span class="text-muted small">by <%= post.author %> on <%= post.createdDate.getMonth() + 1 %>/<%= post.createdDate.getDate() %>/<%= post.createdDate.getFullYear() %> </span>
+                </a>
+                <% } %>
+            <% }) %>
+        </div>
+</div>
+
+<%- include("./partials/footer.ejs") %>

@@ -1,12 +1,13 @@
 const bcrypt = require("bcrypt");
 const mongoose = require('mongoose');
-// const User = require('../models/sign');
+const Post = require('../models/Post');
 const User = require('../models/User');
+const Follow = require('../models/Follow');
 const validateRegisterInput = require('../models/validate_register');
 const validator = require('validator');
 const db=mongoose.connection;
 const md5 = require('md5');
-
+const ObjectId = require('mongodb').ObjectId
 
 
 
@@ -265,5 +266,118 @@ exports.mustBeLoggedIn = function(req, res, next){
             res.redirect('/')
         })
     }
+}
+
+exports.ifUserExists = async function(req,res, next){
+    let username =  await db.collection('users').findOne({username: req.params.username})
+    if(username){
+        req.profileUser = username
+        next();
+    }
+    else{
+        res.render('400');
+    }
+}
+
+exports.sharedProfileData = async function(req,res,next){
+    let isVisitorsProfile = false;
+    let isFollowing = false;
+
+    if(req.session.user){
+        isVisitorsProfile = req.profileUser._id.equals(req.session.user._id)
+        let followtrue = await db.collection('follows').findOne({followedId : req.profileUser._id, authorId : req.session.user._id, following_user : req.profileUser.username})
+
+        if(followtrue){
+            isFollowing = true;
+        }
+    }
+
+    req.isVisitorsProfile = isVisitorsProfile
+    req.isFollowing = isFollowing
+
+    let postCount = await db.collection('posts').countDocuments({author : req.profileUser.username})
+    let followerCount = await db.collection('follows').countDocuments({ followedId: new ObjectId(req.profileUser._id)})
+    let followingCount = await db.collection('follows').countDocuments({authorId : new ObjectId(req.profileUser._id)})
+    
+    req.postCount = postCount
+    req.followerCount = followerCount
+    req.followingCount = followingCount
+
+    console.log(req.profileUser._id);
+
+    next();
+}
+
+
+
+exports.profilePostsScreen = function(req, res){
+    const user = req.params.username
+    Post.find().sort({ createdAt: -1 })
+    .then(posts => {
+        res.render('profile', {
+            user : user,
+            title : "Profile Page",
+            currentPage: "posts",
+            posts: posts,
+            profileUsername: req.profileUser.username,
+            profileAvatar: req.profileUser.avatar,
+            isFollowing: req.isFollowing,
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount} 
+        });
+    })
+    .catch(err => { 
+      console.log(err),
+      res.render('404');
+    });
+
+}
+
+exports.profileFollowersScreen = async function(req, res){
+    
+    const author = req.profileUser._id
+
+    Follow.find().sort({createdAt: -1})
+    .then(followers =>{
+        res.render('profile-followers', {
+            author : author,
+            title : "Followers",
+            currentPage: "followers",
+            followers: followers,
+            profileUsername: req.profileUser.username,
+            profileAvatar: req.profileUser.avatar,
+            isFollowing: req.isFollowing,
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount}
+        });
+    })
+    .catch(err => { 
+        console.log(err),
+        res.render('404');
+    });
+}
+
+exports.profileFollowingScreen = async function(req, res){
+
+    const followed = req.profileUser._id;
+
+    Follow.find().sort({createdAt: -1})
+    .then(following =>{
+        res.render('profile-following', {
+            followed : followed,
+            title : "Following",
+            currentPage: "following",
+            following: following,
+            profileUsername: req.profileUser.username,
+            profileAvatar: req.profileUser.avatar,
+            isFollowing: req.isFollowing,
+            isVisitorsProfile: req.isVisitorsProfile,
+            counts: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount}
+        });
+    })
+    .catch(err => { 
+        console.log(err),
+        res.render('404');
+    });
 }
 
