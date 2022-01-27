@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser= require('body-parser')
 const dotenv = require('dotenv');
 const csrf = require('csurf');
-const cookieParser = require('cookie-parser');
 const User  = require('./models/User');
 const router = require('./router');
 const session = require('express-session');
@@ -20,14 +19,22 @@ const sanitizeHTML = require('sanitize-html')
 // app.use(bodyParser.urlencoded({ extended: false }))
 app.use(flash());
 dotenv.config();
-
-// const dbURI = 'mongodb+srv://tree:tree2309shamin@cluster0.ge0pr.mongodb.net/our-app?retryWrites=true&w=majority'; 
+mongoose.connect(
+  process.env.MONG_URL,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+      console.log("Connected to MongoDB");
+      app.listen(process.env.PORT || 4000, () => {
+          console.log("Listening on port 4000");
+      })
+  }
+);
 
 // const MongoClient = require('mongodb').MongoClient
 
-mongoose.connect(process.env.MONG_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => app.listen(3000))
-  .catch(err => console.log(err));
+// mongoose.connect(process.env.MONG_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(result => app.listen(3000))
+//   .catch(err => console.log(err));
 
 // MongoClient.connect(dbURI, { useUnifiedTopology: true })
 //   .then(client => {
@@ -36,6 +43,7 @@ mongoose.connect(process.env.MONG_URL, { useNewUrlParser: true, useUnifiedTopolo
 //   .catch(error => console.error(error))
 
 let store = new MongoStore({
+  // client: require('./db'),
   mongoUrl: process.env.MONG_URL,
   collection: "sessions"
 });
@@ -72,7 +80,6 @@ app.use(function(req, res, next){
   next()
 })
 
-const csrfProtection = csrf({ cookie: true });
 
 app.set('views', 'views')
 app.set('view engine', 'ejs');
@@ -86,9 +93,9 @@ app.use((req, res, next) => {
     next();
   });
 
-const PORT = process.env.PORT || 4000;
+// const PORT = process.env.PORT || 4000;
 
-const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 app.use(csrf());
 
 app.use(function(req, res, next){
@@ -109,6 +116,7 @@ app.use(function(err, req, res, next){
       }
   }
 })
+const server = require('http').createServer(app)
 const io = require("socket.io")(server);
 
 io.on('connection', (socket) =>{
@@ -127,3 +135,5 @@ io.on('connection', (socket) =>{
     socket.broadcast.emit('typing', {username : socket.username})
   })
 })
+
+module.exports = server

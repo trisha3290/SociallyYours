@@ -1,4 +1,4 @@
-import Chat from './modules/chat'
+import Chat from './chat.js'
 
 if(document.querySelector("#chat-wrapper")){
     new Chat()

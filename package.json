@@ -7,9 +7,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "nodemon app.js",
-    "watch": "webpack --watch",
-    "build": "webpack"
+    "watch": "start nodemon db --ignore frontend-js --ignore public/ && start webpack --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
