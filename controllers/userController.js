@@ -285,25 +285,27 @@ exports.sharedProfileData = async function(req,res,next){
 
     if(req.session.user){
         isVisitorsProfile = req.profileUser._id.equals(req.session.user._id)
-        let followtrue = await db.collection('follows').findOne({followedId : req.profileUser._id, authorId : req.session.user._id, following_user : req.profileUser.username})
+        let followtrue = await db.collection('follows').findOne({followedId : (req.profileUser._id), authorId : (req.session.user._id), following_user : req.profileUser.username})
 
         if(followtrue){
             isFollowing = true;
+            
         }
+        
     }
 
     req.isVisitorsProfile = isVisitorsProfile
     req.isFollowing = isFollowing
-
+    console.log(req.isFollowing);
     let postCount = await db.collection('posts').countDocuments({author : req.profileUser.username})
-    let followerCount = await db.collection('follows').countDocuments({ followedId: new ObjectId(req.profileUser._id)})
-    let followingCount = await db.collection('follows').countDocuments({authorId : new ObjectId(req.profileUser._id)})
-    
+    let followerCount = await db.collection('follows').countDocuments({ followedId: (req.profileUser._id)})
+    let followingCount = await db.collection('follows').countDocuments({authorId : (req.profileUser._id)})
+    console.log(`followers count : ${followerCount}`);
+    console.log(`following count : ${followingCount}`);
     req.postCount = postCount
     req.followerCount = followerCount
     req.followingCount = followingCount
 
-    console.log(req.profileUser._id);
 
     next();
 }
@@ -335,7 +337,7 @@ exports.profilePostsScreen = function(req, res){
 
 exports.profileFollowersScreen = async function(req, res){
     
-    const author = req.profileUser._id
+    const author = (req.profileUser._id);
 
     Follow.find().sort({createdAt: -1})
     .then(followers =>{
@@ -359,7 +361,7 @@ exports.profileFollowersScreen = async function(req, res){
 
 exports.profileFollowingScreen = async function(req, res){
 
-    const followed = req.profileUser._id;
+    const followed = (req.profileUser._id);
 
     Follow.find().sort({createdAt: -1})
     .then(following =>{

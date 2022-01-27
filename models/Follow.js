@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const followSchema = new Schema({
     followedId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
 
     authorId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
 
