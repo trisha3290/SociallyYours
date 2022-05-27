@@ -52,7 +52,7 @@ let sessionOptions = (session({
 }));
 app.use(flash());
 app.use(sessionOptions);
-
+app.use('/stylesheets/fontawesome', express.static(__dirname + '/node_modules/@fortawesome/fontawesome-free/'));
 app.use(function(req, res, next){
 
 
