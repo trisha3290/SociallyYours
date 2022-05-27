@@ -8,8 +8,7 @@
   },
   "scripts": {  
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
-    "watch": "start nodemon app --ignore main.js --ignore public/ && start webpack --watch"
+    "watch": "start nodemon app --ignore frontend-js --ignore public/ && start webpack --watch"
   },
   "author": "",
   "license": "ISC",

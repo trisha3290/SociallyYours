@@ -2,7 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 
 module.exports = {
-  entry: './main.js',
+  entry: './frontend-js/main.js',
   output: {
     filename: 'main-bundled.js',
     path: path.resolve(__dirname, 'public')
