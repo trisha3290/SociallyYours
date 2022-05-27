@@ -18,7 +18,7 @@ const sanitizeHTML = require('sanitize-html')
 dotenv.config();
 const http = require('http').createServer(app)
 const io = require("socket.io")(http);
-const server = http.listen(4000, () => {
+const server = http.listen(process.env.PORT || 4000, () => {
   console.log('server is running on port', server.address().port);
 });
 mongoose.connect(
