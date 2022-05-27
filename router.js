@@ -98,7 +98,7 @@ router.post('/post/:id/delete',userController.mustBeLoggedIn, postController.del
 router.post('/post/:id/edit',userController.mustBeLoggedIn, postController.edit);
 router.post('/addFollow/:username', userController.mustBeLoggedIn, followController.addFollow)
 router.post('/removeFollow/:username', userController.mustBeLoggedIn, followController.removeFollow)
-router.get('/home-dashboard', postController.homepage, postController.homepage_render)
+router.get('/home-dashboard', postController.homepage)
 
 router.get('/profile/:username', userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
 router.get('/profile/:username/followers', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)

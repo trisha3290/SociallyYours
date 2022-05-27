@@ -220,15 +220,16 @@ exports.homepage = async (req, res, next) => {
 
     Post.find().sort({ createdAt: -1 })
     .then(posts => {
-      posts.forEach(async post => {
-        let tpp = false;
-        let tp = await db.collection('follows').findOne({author_username : user.username, following_user : post.author})
-        if(tp != null){
-            tpp = true
-            pposts.push(post)
-        }
-        console.log(tpp)
-      })
+    //   posts.forEach(post => {
+    //     // let tpp = false;
+    //     // let tp = await db.collection('follows').findOne({author_username : user.username, following_user : post.author})
+    //     // if(tp != null){
+    //     //     tpp = true
+    //     //     pposts.push(post)
+    //     // }
+    //     // console.log(tpp)
+    //   })
+    res.render('home-dashboard', { pposts: posts, title: 'Home Page' });
       
     })
     .catch(err => { 
@@ -236,12 +237,12 @@ exports.homepage = async (req, res, next) => {
     });
 
 
-    next();
+    // next();
 }
 
-exports.homepage_render = async function(req,res){
-    const pp = req.pposts
-    console.log(pp)
-    await res.render('home-dashboard', { pposts: pp, title: 'Home Page' });
+// exports.homepage_render = async function(req,res){
+//     const pp = req.pposts
+//     console.log(pp)
+//     await res.render('home-dashboard', { pposts: pp, title: 'Home Page' });
     
-}
+// }
