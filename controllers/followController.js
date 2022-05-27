@@ -4,6 +4,7 @@ const User = require('../models/User');
 const validator = require('validator');
 const ObjectId = require('mongodb').ObjectId
 const db=mongoose.connection;
+const Post = require('../models/Post');
 
 
 exports.addFollow = async(req, res) =>{
@@ -82,9 +83,9 @@ exports.removeFollow = async(req,res) =>{
         req.flash('errors', "You cannot unfollow someone you don't follow")
         return req.session.save(()=> res.redirect("/home-dashboard"))
     }
-    Post.findByIdAndDelete(chkfollowing._id)
+    console.log(chkfollowing._id) 
+    Follow.findByIdAndDelete(chkfollowing._id)
     .then(result => {
-        console.log(result);
         req.flash("success", `Successfully stopped following ${req.params.username}`)
         req.session.save(()=> res.redirect(`/profile/${req.params.username}`))
         

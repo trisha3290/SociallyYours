@@ -4,6 +4,7 @@ const User = require('../models/User');
 const validator = require('validator');
 const ObjectId = require('mongodb').ObjectId
 const db=mongoose.connection;
+const Follow = require('../models/Follow');
 
 exports.create = async(req, res) =>{
     
@@ -214,28 +215,34 @@ exports.search = async (req,res) =>{
 
 
 exports.homepage = async (req, res, next) => {
-    const user = req.session.user
-    
-    const pposts = []
-
-    Post.find().sort({ createdAt: -1 })
-    .then(posts => {
-    //   posts.forEach(post => {
-    //     // let tpp = false;
-    //     // let tp = await db.collection('follows').findOne({author_username : user.username, following_user : post.author})
-    //     // if(tp != null){
-    //     //     tpp = true
-    //     //     pposts.push(post)
-    //     // }
-    //     // console.log(tpp)
-    //   })
-    res.render('home-dashboard', { pposts: posts, title: 'Home Page' });
-      
+    const following = [];
+    const followpair = new Map();
+    Follow.find().
+    then(following =>{
+      following.forEach(follow =>{
+        if(follow.author_username.toString() == req.session.user.username ){
+          followpair.set(follow.following_user.toString(), 1)
+        }
+      })
     })
     .catch(err => { 
       console.log(err);
     });
-
+    Post.find().sort({ createdAt: -1 })
+    .then(posts => {
+      posts.forEach(pp =>{
+        if(followpair.has(pp.author.toString())){
+          following.push(pp)
+          
+        }
+      })
+      console.log(following)
+      res.render('home-dashboard', { posts: following, title: 'Home Page' });
+    })
+    .catch(err => { 
+      console.log(err);
+    });
+    
 
     // next();
 }
@@ -244,5 +251,7 @@ exports.homepage = async (req, res, next) => {
 //     const pp = req.pposts
 //     console.log(pp)
 //     await res.render('home-dashboard', { pposts: pp, title: 'Home Page' });
+//     Follow.find().
+//     then
     
 // }

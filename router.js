@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const db=mongoose.connection;
 const Post = require('./models/Post');
 const Follow = require('./models/Follow');
+const ObjectID = require('mongodb').ObjectID
 
 const router = express.Router();
 const userController = require('./controllers/userController');
@@ -98,11 +99,14 @@ router.post('/post/:id/delete',userController.mustBeLoggedIn, postController.del
 router.post('/post/:id/edit',userController.mustBeLoggedIn, postController.edit);
 router.post('/addFollow/:username', userController.mustBeLoggedIn, followController.addFollow)
 router.post('/removeFollow/:username', userController.mustBeLoggedIn, followController.removeFollow)
-// router.get('/home-dashboard', postController.homepage)
+
 
 router.get('/profile/:username', userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
 router.get('/profile/:username/followers', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
 router.get('/profile/:username/following', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)
+// router.get('/home-dashboard', postController.homepage)
+
+
 
 router.get('/', (req, res) => {
   if(req.session.user){
@@ -120,18 +124,52 @@ router.get('/home-guest', (req, res) =>{
 
 
 
+
 router.get('/home-dashboard', (req, res) =>{
     
+    // const following = [];
+    // let state = false;
+    // const followpair = new Map();
+    
+    // Follow.find()
+    // .then(following =>{
+    //   followpair.clear()
+    //   state = true;
+    //   following.forEach(follow =>{
+    //     followpair.set(follow.following_user, follow.author_username)
+    //   })
+    // })
+    // .catch(err => { 
+    //   console.log(err);
+    // });
+
+    const user = req.session.user
     Post.find().sort({ createdAt: -1 })
-    .then(posts => {
-      res.render('home-dashboard', { posts: posts, title: 'Home Page' });
-      
-    })
-    .catch(err => { 
-      console.log(err);
-    });
+      .then(posts => {
 
+        let followedUsers =[];
+        Follow.find({author_username: user.username}, function(err,docs){
+          if (err){
+            console.log(err);
+          }
+          else{
 
+              followedUsers = docs
+              
+              followedUsers = followedUsers.map(function(followDoc){
+                return followDoc.following_user.toString()
+              })
+              console.log(followedUsers)
+              res.render('home-dashboard', { posts: posts, title: 'Home Page', followedUsers: followedUsers, user: user });
+          }
+        })
+        
+      })
+      .catch(err => { 
+        console.log(err);
+      });
+    
+    
     
 });
 
