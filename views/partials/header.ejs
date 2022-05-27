@@ -42,7 +42,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id = "nav">
         
            <% if(user) {%>
-            <h4 class="mt-0 mb-3 mr-md-auto font-weight-normal ml-lg-5 d-flex flex-column flex-md-row align-items-center p-2"><a href="/home-dashboard" class="text-white">SociallyYours</a></h4>
+            <h4 class="mt-1 mb-2 mr-md-auto font-weight-normal ml-lg-5 d-flex flex-column flex-md-row align-items-center p-2"><a href="/home-dashboard" class="text-white">SociallyYours</a></h4>
             
                 <div class="flex-row my-3 my-md-0 ml-2 " >
                     <form action="/search" method="POST" class="d-inline">
@@ -51,11 +51,12 @@
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <button type="submit" class="btn btn-success" title="Search" data-toggle="tooltip" data-placement="bottom">
                             <!-- <i class="fas fa-search"></i> -->
+                            <!-- &#x1F50E;&#xFE0F; -->
                             Search
                         </button>
         
                     </form>
-                    <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom" onclick = "showChat()">Let's chat</i></span>
+                    <span class="text-white mr-2 header-chat-icon" id ="unicode-symbols" title="Chat" data-toggle="tooltip" data-placement="bottom" onclick = "showChat()">&#x1F5E8;</i></span>
                     <a href="/profile/<%= user.username %>" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>
                     <a href="/post-create"><button type="button" class="btn btn-success mr-sm-2" >Create Post</button> </a>
                     <form action="/logout" method="POST" class="d-inline">
