@@ -16,6 +16,17 @@ const followSchema = new Schema({
       type: String,
       required: true,
     },
+
+
+    author_username: {
+      type: String,
+      required: true,
+    },
+    
+    author_avatar: {
+      type: String,
+      required: true,
+    },
     
   });
   

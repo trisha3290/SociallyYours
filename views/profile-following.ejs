@@ -7,14 +7,16 @@
     <%- include('partials/profileShared') %>
   
     <div class="list-group">
-      <% following.forEach(follow => { %>
-        <% if (follow.authorId === followed) { %>
-        <a href="/profile/<%= follow.following_user %>" class="list-group-item list-group-item-action">
-            <img class="avatar-tiny" src="<%= follow.followedId.avatar %>">
-            <%= follow.following_user%>
+      <% for(var i =0; i< followedId2.length; i++){%>
+        <% if(followedId2[i].toString() == author2.toString()) {  %>
+
+          <a href="/profile/<%= username2[i] %>" class="list-group-item list-group-item-action">
+            <b><%= username2[i] %></b>
           </a>
-        <% } %>
-     <% }) %>
+            
+          <% } %>
+
+      <% } %>
     </div>
   </div>
 

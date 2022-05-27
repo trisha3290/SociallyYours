@@ -2,13 +2,13 @@
     
     <div class="dashboard align-items-center p-5">
         <%- include('./partials/flash') %>
-        <% if (posts.length >0) { %>
+        <% if (pposts.length >0) { %>
             <h2 class="text-center mb-4">The Latest From Those You Follow</h2> 
             <div class="list-group">
-                <% posts.forEach(post => { %>
-                  <a href="/post/<%= post._id  %>" class="list-group-item list-group-item-action">
-                    <img class="avatar-tiny" src="<%= post.avatar %>">
-                      <strong><%= post.title %></strong> <span class="text-muted small">by <%= post.author %> on <%= post.createdDate.getMonth() + 1 %>/<%= post.createdDate.getDate() %>/<%= post.createdDate.getFullYear() %> </span>
+                <% pposts.forEach(post => { %>
+                    <a href="/post/<%= post._id  %>" class="list-group-item list-group-item-action">
+                        <img class="avatar-tiny" src="<%= post.avatar %>">
+                        <strong><%= post.title %></strong> <span class="text-muted small">by <%= post.author %> on <%= post.createdDate.getMonth() + 1 %>/<%= post.createdDate.getDate() %>/<%= post.createdDate.getFullYear() %> </span>
                     </a>
                <% }) %>
               </div>

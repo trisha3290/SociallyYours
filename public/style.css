@@ -38,6 +38,9 @@ body, .tooltip{
 p {
     color:lightslategray;
 }
+.a {
+  text-decoration: none;
+}
 .not-found{
   text-align: center;
   margin-top: 32px;
@@ -162,14 +165,12 @@ footer{
   right: 20px;
   width: 290px;
   height: 350px;
-  background-color: #FFF;
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   transition: all .4s ease-in-out;
   opacity: 0;
-  transform: translateY(100%)
 }
-
 .chat--visible {
   opacity: 1;
   transform: translateY(0)

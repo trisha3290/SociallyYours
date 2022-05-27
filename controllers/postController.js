@@ -211,3 +211,37 @@ exports.search = async (req,res) =>{
     res.render('search-results', { posts: posts, users:users,  title: "Search Page" });
     
 }
+
+
+exports.homepage = async (req, res, next) => {
+    const user = req.session.user
+    
+    const pposts = []
+
+    Post.find().sort({ createdAt: -1 })
+    .then(posts => {
+      posts.forEach(async post => {
+        let tpp = false;
+        let tp = await db.collection('follows').findOne({author_username : user.username, following_user : post.author})
+        if(tp != null){
+            tpp = true
+            pposts.push(post)
+        }
+        console.log(tpp)
+      })
+      
+    })
+    .catch(err => { 
+      console.log(err);
+    });
+
+
+    next();
+}
+
+exports.homepage_render = async function(req,res){
+    const pp = req.pposts
+    console.log(pp)
+    await res.render('home-dashboard', { pposts: pp, title: 'Home Page' });
+    
+}

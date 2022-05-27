@@ -15,32 +15,25 @@ const sanitizeHTML = require('sanitize-html')
 
 
 
-// Make sure you place body-parser before your CRUD handlers!
-// app.use(bodyParser.urlencoded({ extended: false }))
-app.use(flash());
 dotenv.config();
+const http = require('http').createServer(app)
+const io = require("socket.io")(http);
+const server = http.listen(4000, () => {
+  console.log('server is running on port', server.address().port);
+});
 mongoose.connect(
   process.env.MONG_URL,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  () => {
-      console.log("Connected to MongoDB");
-      app.listen(process.env.PORT || 4000, () => {
-          console.log("Listening on port 4000");
-      })
+  { useNewUrlParser: true, useUnifiedTopology: true}, (err) =>{
+    console.log("Connected to MongoDB", err);
   }
+  // () => {
+  //     console.log("Connected to MongoDB");
+  //     // app.listen(process.env.PORT || 4000, () => {
+  //     //     console.log("Listening on port 4000");
+  //     // })
+  // }
 );
 
-// const MongoClient = require('mongodb').MongoClient
-
-// mongoose.connect(process.env.MONG_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(result => app.listen(3000))
-//   .catch(err => console.log(err));
-
-// MongoClient.connect(dbURI, { useUnifiedTopology: true })
-//   .then(client => {
-//     console.log('Connected to Database')
-//   })
-//   .catch(error => console.error(error))
 
 let store = new MongoStore({
   // client: require('./db'),
@@ -50,14 +43,15 @@ let store = new MongoStore({
 
 
 let oneDay = 1000 * 60 * 60 * 24;
-app.use(session({
+let sessionOptions = (session({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
     store: store,
     saveUninitialized:false,
     cookie: { maxAge: oneDay, httpOnly: true },
     resave: false 
 }));
-
+app.use(flash());
+app.use(sessionOptions);
 
 app.use(function(req, res, next){
 
@@ -77,6 +71,7 @@ app.use(function(req, res, next){
 
   // make user session data available from within view templates
   res.locals.user = req.session.user
+  // console.log(io);
   next()
 })
 
@@ -106,6 +101,7 @@ app.use(function(req, res, next){
 
 app.use('/',router);
 app.use(function(err, req, res, next){
+  // console.log(socket);
   if(err){
     // console.log(err);
       if(err.code == "EBADCSRFTOKEN"){
@@ -116,24 +112,42 @@ app.use(function(err, req, res, next){
       }
   }
 })
-const server = require('http').createServer(app)
-const io = require("socket.io")(server);
 
-io.on('connection', (socket) =>{
-  console.log('New user connected')
 
-  socket.username = req.session.username
-
-  //listen on new message
-  socket.on('new_message', (data) => {
-    //broadcast the new message
-    io.sockets.emit('new_message', {message : data.message, username : socket.username});
-  })
-
-  //listen on typing
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', {username : socket.username})
-  })
+io.use(function(socket, next){
+  sessionOptions(socket.request, socket.request.res, next)
 })
 
-module.exports = server
+io.on('connection', function(socket){
+  console.log('user connected');
+  if(socket.request.session.user){
+      let user = socket.request.session.user
+
+      socket.emit('welcome', {username: user.username, avatar: user.avatar})
+
+      socket.on('chatMessageFromBrowser', function(data){
+          socket.broadcast.emit('chatMessageFromServer', {message: data.message, username: user.username, avatar: user.avatar})
+      })
+  }
+})
+
+// io.on('connection', (socket) =>{
+//   console.log('New user connected')
+
+//   socket.username = req.session.username
+
+//   //listen on new message
+//   socket.on('new_message', (data) => {
+//     //broadcast the new message
+//     io.sockets.emit('new_message', {message : data.message, username : socket.username});
+//   })
+
+//   //listen on typing
+//   socket.on('typing', (data) => {
+//     socket.broadcast.emit('typing', {username : socket.username})
+//   })
+// })
+
+
+
+// module.exports = server

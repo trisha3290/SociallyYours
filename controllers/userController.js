@@ -248,7 +248,6 @@ exports.login = async (req, res) =>{
 }
 
 exports.logout = function(req,res){
-    console.log('hello')
     req.flash('errors', "Logged out!!")
     req.session.destroy(function(){
         return res.redirect('home-guest');
@@ -282,11 +281,12 @@ exports.ifUserExists = async function(req,res, next){
 exports.sharedProfileData = async function(req,res,next){
     let isVisitorsProfile = false;
     let isFollowing = false;
-
     if(req.session.user){
         isVisitorsProfile = req.profileUser._id.equals(req.session.user._id)
-        let followtrue = await db.collection('follows').findOne({followedId : (req.profileUser._id), authorId : (req.session.user._id), following_user : req.profileUser.username})
-
+        let followtrue = await db.collection('follows').findOne({followedId : new ObjectId(req.profileUser._id), authorId : new ObjectId(req.session.user._id), following_user : req.profileUser.username})
+        // let followtp = await db.collection('follows').findOne({following_user : req.profileUser.username})
+        // console.log(new ObjectId(req.session.user._id));
+        // console.log(followtrue.authorId.toString());
         if(followtrue){
             isFollowing = true;
             
@@ -300,8 +300,8 @@ exports.sharedProfileData = async function(req,res,next){
     let postCount = await db.collection('posts').countDocuments({author : req.profileUser.username})
     let followerCount = await db.collection('follows').countDocuments({ followedId: (req.profileUser._id)})
     let followingCount = await db.collection('follows').countDocuments({authorId : (req.profileUser._id)})
-    console.log(`followers count : ${followerCount}`);
-    console.log(`following count : ${followingCount}`);
+    // console.log(`followers count : ${followerCount}`);
+    // console.log(`following count : ${followingCount}`);
     req.postCount = postCount
     req.followerCount = followerCount
     req.followingCount = followingCount
@@ -313,7 +313,7 @@ exports.sharedProfileData = async function(req,res,next){
 
 
 exports.profilePostsScreen = function(req, res){
-    const user = req.params.username
+    const user = req.session.user
     Post.find().sort({ createdAt: -1 })
     .then(posts => {
         res.render('profile', {
@@ -338,14 +338,24 @@ exports.profilePostsScreen = function(req, res){
 exports.profileFollowersScreen = async function(req, res){
     
     const author = (req.profileUser._id);
+    const followedId1 = [];
+    const author1 = author.toString();
+    const avatar1 = [];
+    const username1 = [];
 
     Follow.find().sort({createdAt: -1})
     .then(followers =>{
+        followers.forEach(follower =>{ console.log(follower.authorId), followedId1.push(follower.followedId.toString()),avatar1.push(follower.author_avatar.toString()), username1.push(follower.author_username.toString())})
+        console.log(author1);
         res.render('profile-followers', {
             author : author,
             title : "Followers",
             currentPage: "followers",
             followers: followers,
+            followedId1: followedId1,
+            author1 : author1,
+            avatar1: avatar1,
+            username1 : username1,
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing,
@@ -361,15 +371,33 @@ exports.profileFollowersScreen = async function(req, res){
 
 exports.profileFollowingScreen = async function(req, res){
 
-    const followed = (req.profileUser._id);
-
+    const followed = (req.profileUser._id).toString();
+    const followedId2 = [];
+    const author2 = followed.toString();
+    const username2 = [];
+    
     Follow.find().sort({createdAt: -1})
+    // .then(following =>{
+    //     following.forEach(follow =>{
+    //         follow.followedId = follow.followedId.toString()
+    //         follow.authorId = follow.authorId.toString()
+    //     })
+    // })
     .then(following =>{
+        following.forEach(follow =>{
+            followedId2.push(follow.authorId.toString())
+            username2.push(follow.following_user.toString())
+
+            
+        })
         res.render('profile-following', {
             followed : followed,
             title : "Following",
             currentPage: "following",
             following: following,
+            followedId2: followedId2,
+            author2 : author2,
+            username2 : username2,
             profileUsername: req.profileUser.username,
             profileAvatar: req.profileUser.avatar,
             isFollowing: req.isFollowing,

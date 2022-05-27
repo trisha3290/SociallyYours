@@ -9,27 +9,10 @@
     <title><%=typeof(title)=="undefined"?'OurApp':`${title} | OurApp`%></title>
     
 
-    <!-- <script type = "text/javascript">
-        function changeHashOnLoad() {
-            window.location.href += "http://localhost:4000/home-guest";
-            setTimeout("changeHashAgain()", "50");
-        }
-    
-        function changeHashAgain() 
-        {          
-            window.location.href += "1";
-        }
-    
-        var storedHash = window.location.hash;
-        window.setInterval(function () {
-            if (window.location.hash != storedHash) {
-                window.location.hash = storedHash;
-            }
-        }, 50);
-    
-        </script> -->
+
     <script type = "text/javascript">
         var ct = 0;
+        console.log(ct);
         function msgprint() {
             console.log(ct);
             
@@ -40,13 +23,6 @@
            
         }
     </script>
-    <!-- <script type="text/javascript">
-        function ClearHistory()
-        {
-            console.log(history.length);
-             window.location.href = 'https://www.instagram.com/'
-        }
-    </script> -->
     <script>
         setTimeout(function() {
             var elem = document.getElementById("msg");
@@ -78,7 +54,7 @@
                         </button>
         
                     </form>
-                    <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-comment"></i></span>
+                    <span class="text-white mr-2 header-chat-icon" title="Chat" data-toggle="tooltip" data-placement="bottom" onclick = "showChat()"><i class="fas fa-comment"></i></span>
                     <a href="/profile/<%= user.username %>" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>
                     <a href="/post-create"><button type="button" class="btn btn-success mr-sm-2" >Create Post</button> </a>
                     <form action="/logout" method="POST" class="d-inline">
@@ -103,4 +79,3 @@
         
     </nav>
 </header>
-

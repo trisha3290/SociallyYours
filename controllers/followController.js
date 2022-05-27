@@ -8,6 +8,7 @@ const db=mongoose.connection;
 
 exports.addFollow = async(req, res) =>{
     let usern =  await db.collection('users').findOne({username: req.params.username})
+    let usern1 =  await db.collection('users').findOne({username: req.session.user.username})
     async function FollowValid(){
     
         let errors = {}
@@ -22,7 +23,7 @@ exports.addFollow = async(req, res) =>{
             req.flash('errors', errors.follow)
         }
 
-        let chkfollow = await db.collection('follows').findOne({followedId: usern._id})
+        let chkfollow = await db.collection('follows').findOne({followedId: usern._id, authorId: usern1._id})
         if(chkfollow){
             errors.follow = `You are already following ${usern.username}`
             req.flash('errors', errors.follow)
@@ -46,13 +47,14 @@ exports.addFollow = async(req, res) =>{
         return res.redirect('home-dashboard') ;
     }
 
-    console.log(usern.username);
     
     
     let follow = new Follow({
         followedId : new ObjectId((usern._id)),
         authorId : new ObjectId((req.session.user._id)),
-        following_user: req.params.username
+        following_user: req.params.username,
+        author_username: req.session.user.username,
+        author_avatar: req.session.user.avatar
     })
 
     try{

@@ -1,5 +1,4 @@
 const express = require('express');
-// const User = require('./models/sign');
 const User = require('./models/User');
 const {body} = require('express-validator');
 const mongoose = require('mongoose');
@@ -99,6 +98,7 @@ router.post('/post/:id/delete',userController.mustBeLoggedIn, postController.del
 router.post('/post/:id/edit',userController.mustBeLoggedIn, postController.edit);
 router.post('/addFollow/:username', userController.mustBeLoggedIn, followController.addFollow)
 router.post('/removeFollow/:username', userController.mustBeLoggedIn, followController.removeFollow)
+router.get('/home-dashboard', postController.homepage, postController.homepage_render)
 
 router.get('/profile/:username', userController.ifUserExists, userController.sharedProfileData, userController.profilePostsScreen)
 router.get('/profile/:username/followers', userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
@@ -120,15 +120,24 @@ router.get('/home-guest', (req, res) =>{
 
 
 
-router.get('/home-dashboard', (req, res) =>{
-    Post.find().sort({ createdAt: -1 })
-    .then(posts => {
-      res.render('home-dashboard', { posts: posts, title: 'Home Page' });
-    })
-    .catch(err => { 
-      console.log(err);
-    });
-});
+// router.get('/home-dashboard', (req, res) =>{
+    
+//     const user = req.session.user
+//     Post.find().sort({ createdAt: -1 })
+//     .then(posts => {
+//       posts.forEach(post =>{
+//         myFunction(user, post)
+//       })
+      
+//     })
+//     .catch(err => { 
+//       console.log(err);
+//     });
+
+//     console.log(pposts)
+
+//     res.render('home-dashboard', { pposts: pposts, title: 'Home Page' });
+// });
 
 // router.get('/profile/:username',userController.mustBeLoggedIn, (req, res) =>{
 //     // const user = req.params.username;
