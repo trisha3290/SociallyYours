@@ -119,7 +119,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/home-guest', (req, res) =>{
-    res.render('home-guest', { title: 'Home Page' });
+    res.render('home-guest', { title: 'Home Page',  user: req.session.user });
 });
 
 
@@ -195,7 +195,10 @@ router.get('/post-create', (req, res) =>{
 
 router.get('/post/:id/editpage',userController.mustBeLoggedIn, postController.editpage);
 
-
+router.get('/video-call' , (req,res)=>{
+  console.log("videoaaaaaaaaa")
+  res.render('video-call' , {RoomId:abcdef});
+});
 
 // 404 page
 router.use((req, res) => {

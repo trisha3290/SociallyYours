@@ -15,10 +15,11 @@ const sanitizeHTML = require('sanitize-html')
 
 
 
+
 dotenv.config();
 const http = require('http').createServer(app)
 const io = require("socket.io")(http);
-const server = http.listen(process.env.PORT, () => {
+const server = http.listen(process.env.PORT||4000, () => {
   console.log('server is running on port', server.address().port);
 });
 mongoose.connect(
@@ -33,6 +34,13 @@ mongoose.connect(
   //     // })
   // }
 );
+
+const {ExpressPeerServer} = require('peer')
+const {v4:uuidv4} = require('uuid');
+const peer = ExpressPeerServer(server , {
+  debug:true
+});
+app.use('/peerjs', peer);
 
 
 let store = new MongoStore({
@@ -122,7 +130,6 @@ io.on('connection', function(socket){
   console.log('user connected');
   if(socket.request.session.user){
       let user = socket.request.session.user
-
       socket.emit('welcome', {username: user.username, avatar: user.avatar})
 
       socket.on('chatMessageFromBrowser', function(data){

@@ -1,0 +1,19 @@
+<%- include("./partials/header.ejs") %>
+
+<div class="create-post py-md-5 ">
+  <%- include('./partials/flash') %>
+    <form action="/create-post" method="POST">
+        <div class = "form-group">
+            <label class="form-label " for="title"><small>Title</small></label>
+            <input type="text" class="form-control form-control-title" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="body"><small>Blog Content</small></label>
+            <textarea id="body" class="form-control" name="body" required></textarea>
+        </div>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn btn-primary"><small>Save new post</small></button>
+    </form>
+  </div>
+
+<%- include("./partials/footer.ejs") %>

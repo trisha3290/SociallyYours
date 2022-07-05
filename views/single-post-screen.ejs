@@ -7,10 +7,10 @@
 
    <% if (post.author === user.username){ %>
     <span class="pt-2">
-      <a href="/post/<%= post._id %>/editpage" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+      <a href="/post/<%= post._id %>/editpage" class="text-primary mr-2" data-toggle="tooltip" data-placement="top" title="Edit">&#x1F589;</a>
       <form class="delete-post-form d-inline" action="/post/<%= post._id %>/delete" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fas fa-trash"></i></button>
+        <button class="delete-post-button text-danger" data-toggle="tooltip" data-placement="top" title="Delete">&#x1F5D1;</button>
       </form>
     </span> 
   <%  } %>

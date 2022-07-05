@@ -57,7 +57,7 @@
         
                     </form>
                     <span class="text-white mr-2 header-chat-icon" id ="unicode-symbols" title="Chat" data-toggle="tooltip" data-placement="bottom" onclick = "showChat()">&#x1F5E8;</i></span>
-                    <a href="/profile/<%= user.username %>" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>
+                    <a href="/profile/<%= user.username %>" class="mr-2"><img title="My Profile" data-toggle="tooltip" data-placement="bottom" style="width: 32px; height: 32px; border-radius: 16px;" src= "<%= user.avatar %>.jpg"></a>   
                     <a href="/post-create"><button type="button" class="btn btn-success mr-sm-2" >Create Post</button> </a>
                     <form action="/logout" method="POST" class="d-inline">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
