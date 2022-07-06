@@ -10,7 +10,7 @@
     
 
 
-    <script type = "text/javascript">
+    <!-- <script type = "text/javascript">
         var ct = 0;
         console.log(ct);
         function msgprint() {
@@ -22,7 +22,7 @@
             }
            
         }
-    </script>
+    </script> -->
     <script>
         setTimeout(function() {
             var elem = document.getElementById("msg");
@@ -61,7 +61,7 @@
                     <a href="/post-create"><button type="button" class="btn btn-success mr-sm-2" >Create Post</button> </a>
                     <form action="/logout" method="POST" class="d-inline">
                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <button type="submit" class="btn btn-secondary mr-lg-5" onclick = "msgprint()" >Sign Out</button>
+                        <button type="submit" class="btn btn-secondary mr-lg-5">Sign Out</button>
                     </form>
                 </div>
             
