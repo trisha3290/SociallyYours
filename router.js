@@ -142,7 +142,7 @@ router.get('/home-dashboard', (req, res) =>{
     // .catch(err => { 
     //   console.log(err);
     // });
-
+    
     const user = req.session.user
     Post.find().sort({ createdAt: -1 })
       .then(posts => {
@@ -160,6 +160,7 @@ router.get('/home-dashboard', (req, res) =>{
                 return followDoc.following_user.toString()
               })
               console.log(followedUsers)
+              
               res.render('home-dashboard', { posts: posts, title: 'Home Page', followedUsers: followedUsers, user: user });
           }
         })
