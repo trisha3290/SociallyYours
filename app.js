@@ -11,6 +11,10 @@ const flash = require('connect-flash');
 const markdown = require('marked');
 const app = express();
 const sanitizeHTML = require('sanitize-html')
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+//app.use(express.static('public'));// includes css files and js files which are embedded in html 
+app.use(express.static(__dirname + '/public'));
 
 
 
